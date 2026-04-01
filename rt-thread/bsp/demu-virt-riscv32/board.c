@@ -6,15 +6,12 @@
 #define CLINT_MTIMECMP_HI (*(volatile unsigned int *)0x02004004)
 #define CLINT_MTIME_LO (*(volatile unsigned int *)0x0200BFF8)
 
-#define TICK_CYCLES 10000
+#define TICK_CYCLES 50000
 
 extern int _ebss;
 extern int __stack;
 
 #define STACK_SIZE 0x2000
-
-#define HEAP_BEGIN ((void *)&_ebss)
-#define HEAP_END ((void *)((rt_uint32_t) & __stack - STACK_SIZE))
 
 void SystemIrqHandler(rt_uint32_t mcause) {
   if (mcause == 0x80000007) {
@@ -34,9 +31,7 @@ extern void IRQ_Handler(void);
 
 void rt_hw_board_init(void) {
 #if defined(RT_USING_USER_MAIN) && defined(RT_USING_HEAP)
-  rt_system_heap_init(HEAP_BEGIN, HEAP_END);
-  rt_kprintf("Heap: 0x%08x - 0x%08x (%d bytes)\n", HEAP_BEGIN, HEAP_END,
-             (rt_uint32_t)HEAP_END - (rt_uint32_t)HEAP_BEGIN);
+  rt_system_heap_init((void *)0x80010000, (void *)0x80030000);
 #endif
 
   asm volatile("csrw mtvec, %0" ::"r"(IRQ_Handler));
