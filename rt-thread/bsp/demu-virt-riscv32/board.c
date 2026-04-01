@@ -39,7 +39,7 @@ extern void IRQ_Handler(void);
 
 void rt_hw_board_init(void) {
 #if defined(RT_USING_USER_MAIN) && defined(RT_USING_HEAP)
-  rt_system_heap_init((void *)&_ebss, (void *)0x80040000);
+  rt_system_heap_init((void *)&_ebss, (void *)0x8003F000);
 #endif
 
   asm volatile("csrw mtvec, %0" ::"r"(IRQ_Handler));
