@@ -30,7 +30,8 @@ C_SRCS = \
 
 ASM_SRCS = \
 	$(BSP_DIR)/startup.S \
-	$(CPU_DIR)/context_gcc.S
+	$(CPU_DIR)/context_gcc.S \
+	libcpu/risc-v/rv32m1/interrupt_gcc.S
 
 C_OBJS   = $(patsubst %.c, $(BUILD_DIR)/%.o, $(C_SRCS))
 ASM_OBJS = $(patsubst %.S, $(BUILD_DIR)/%.o, $(ASM_SRCS))

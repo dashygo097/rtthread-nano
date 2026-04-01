@@ -1,6 +1,5 @@
 # start.S - Minimal RISC-V startup code
-.global _start       
-.extern main      
+.globl _start       
 
 _start:
     csrw mstatus, zero
@@ -9,7 +8,7 @@ _start:
     lui sp, 0x80004
     mv fp, zero
 
-    jal ra, main
+    jal ra, entry 
 
     j .
 

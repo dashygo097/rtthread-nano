@@ -3,29 +3,29 @@ ENTRY(_start)
 
 MEMORY
 {
-    IMEM (rx)  : ORIGIN = 0x00000000, LENGTH = 256K
-    DMEM (rw)  : ORIGIN = 0x80000000, LENGTH = 256K
+    RAM (rwx) : ORIGIN = 0x80000000, LENGTH = 16M
 }
 
 SECTIONS
 {
     .text : {
+        KEEP(*(.text.entry))
         *(.text)
         *(.text*)
         . = ALIGN(4);
-    } > IMEM
+    } > RAM
 
     .rodata : {
         *(.rodata)
         *(.rodata*)
         . = ALIGN(4);
-    } > IMEM
+    } > RAM
 
     .data : {
         *(.data)
         *(.data*)
         . = ALIGN(4);
-    } > DMEM
+    } > RAM
 
     .bss : {
         _sbss = .;
@@ -34,13 +34,12 @@ SECTIONS
         *(COMMON)
         . = ALIGN(4);
         _ebss = .;
-    } > DMEM
+    } > RAM
+
+    __stack = ORIGIN(RAM) + LENGTH(RAM);
 
     /DISCARD/ : {
         *(.comment)
         *(.eh_frame)
-        *(.note*)
     }
 }
-
-__stack = ORIGIN(DMEM) + LENGTH(DMEM);
