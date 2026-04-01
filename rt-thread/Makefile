@@ -7,7 +7,7 @@ CC      = riscv64-unknown-elf-gcc
 OBJCOPY = riscv64-unknown-elf-objcopy
 OBJDUMP = riscv64-unknown-elf-objdump
 
-CFLAGS  = -march=rv32i_zicsr -mabi=ilp32 -mcmodel=medany -O2 -g -Wall
+CFLAGS  = -march=rv32i_zicsr -mabi=ilp32 -mcmodel=medany -g -Wall
 LDFLAGS = -T $(BSP_DIR)/linker.ld -nostdlib -lc -lgcc
 
 INC_DIR = -I$(BSP_DIR) -Iinclude -I$(CPU_DIR)
