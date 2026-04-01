@@ -1,5 +1,5 @@
 # Demu Virt RISC-V 32 BSP Makefile for RT-Thread Nano
-BSP_DIR   = bsp/demu-virt-riscv32
+BSP_DIR   = bsp/qemu-virt-riscv32
 BUILD_DIR = build
 CPU_DIR   = libcpu/risc-v/common
 
