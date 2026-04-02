@@ -1,15 +1,3 @@
-/*
- * Copyright (c) 2006-2018, RT-Thread Development Team
- *
- * SPDX-License-Identifier: Apache-2.0
- *
- * Change Logs:
- * Date           Author       Notes
- * 2018/10/28     Bernard      The unify RISC-V porting implementation
- * 2018/12/27     Jesven       Add SMP support
- * 2020/11/20     BalanceTWK   Add FPU support
- */
-
 #include "cpuport.h"
 
 #ifdef RT_USING_SMP
@@ -17,31 +5,16 @@
 #define rt_hw_interrupt_enable  rt_hw_local_irq_enable
 #endif
 
-/*
- * rt_base_t rt_hw_interrupt_disable(void);
- */
     .globl rt_hw_interrupt_disable
 rt_hw_interrupt_disable:
     csrrci a0, mstatus, 8
     ret
 
-/*
- * void rt_hw_interrupt_enable(rt_base_t level);
- */
     .globl rt_hw_interrupt_enable
 rt_hw_interrupt_enable:
     csrw mstatus, a0
     ret
 
-/*
- * #ifdef RT_USING_SMP
- * void rt_hw_context_switch_to(rt_ubase_t to, stuct rt_thread *to_thread);
- * #else
- * void rt_hw_context_switch_to(rt_ubase_t to);
- * #endif
- * a0 --> to
- * a1 --> to_thread
- */
     .globl rt_hw_context_switch_to
 rt_hw_context_switch_to:
     LOAD sp, (a0)
@@ -54,25 +27,8 @@ rt_hw_context_switch_to:
     csrw mstatus, a0
     j    rt_hw_context_switch_exit
 
-/*
- * #ifdef RT_USING_SMP
- * void rt_hw_context_switch(rt_ubase_t from, rt_ubase_t to, struct rt_thread *to_thread);
- * #else
- * void rt_hw_context_switch(rt_ubase_t from, rt_ubase_t to);
- * #endif
- *
- * a0 --> from
- * a1 --> to
- * a2 --> to_thread
- */
     .globl rt_hw_context_switch
 rt_hw_context_switch:
-    /* saved from thread context
-     *     x1/ra       -> sp(0)
-     *     x1/ra       -> sp(1)
-     *     mstatus.mie -> sp(2)
-     *     x(i)        -> sp(i-4)
-     */
 #ifdef ARCH_RISCV_FPU
     addi    sp, sp, -32 * FREGBYTES
 
@@ -152,11 +108,6 @@ save_mpie:
     STORE x30, 30 * REGBYTES(sp)
     STORE x31, 31 * REGBYTES(sp)
 
-    /* restore to thread context
-     * sp(0) -> epc;
-     * sp(1) -> ra;
-     * sp(i) -> x(i+2)
-     */
     LOAD sp,  (a1)
 
 #ifdef RT_USING_SMP
@@ -167,14 +118,6 @@ save_mpie:
     j rt_hw_context_switch_exit
 
 #ifdef RT_USING_SMP
-/*
- * void rt_hw_context_switch_interrupt(void *context, rt_ubase_t from, rt_ubase_t to, struct rt_thread *to_thread);
- *
- * a0 --> context
- * a1 --> from
- * a2 --> to
- * a3 --> to_thread
- */
     .globl rt_hw_context_switch_interrupt
 rt_hw_context_switch_interrupt:
 
@@ -195,18 +138,16 @@ rt_hw_context_switch_exit:
     mv a0, sp
 
     csrr  t0, mhartid
-    /* switch interrupt stack of current cpu */
     la    sp, __stack_start__
     addi  t1, t0, 1
     li    t2, __STACKSIZE__
     mul   t1, t1, t2
-    add   sp, sp, t1 /* sp = (cpuid + 1) * __STACKSIZE__ + __stack_start__ */
+    add   sp, sp, t1 
 
     call rt_signal_check
     mv sp, a0
 #endif
 #endif
-    /* resw ra to mepc */
     LOAD a0,   0 * REGBYTES(sp)
     csrw mepc, a0
 
