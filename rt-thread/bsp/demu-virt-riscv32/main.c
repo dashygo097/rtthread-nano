@@ -3,7 +3,7 @@
 static int tick = 0;
 
 int main(void) {
-  rt_kprintf("RT-Thread Nano booted on demu RV32IM!\n");
+  rt_kprintf("Hello World!\n");
 
   while (1) {
     rt_kprintf("[MAIN] tick %d\n", tick++);

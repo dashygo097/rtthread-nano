@@ -63,9 +63,6 @@ void rt_hw_console_output(const char *str) {
     if (*str == '\n')
       UART_TXD = (unsigned int)'\r';
     UART_TXD = (unsigned int)(unsigned char)*str++;
-    for (int i = 0; i < 50; i++) {
-      ;
-    }
   }
 }
 #endif
