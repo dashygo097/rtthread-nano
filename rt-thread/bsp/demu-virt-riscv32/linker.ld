@@ -19,6 +19,8 @@ SECTIONS
     .rodata : {
         *(.rodata)
         *(.rodata*)
+        *(.srodata)
+        *(.srodata*)
         . = ALIGN(4);
     } > IMEM
 
@@ -30,9 +32,7 @@ SECTIONS
         *(.sdata*)
         . = ALIGN(4);
         _data_end = .;
-    } > DMEM AT > IMEM
-
-    _data_load = LOADADDR(.data);
+    } > DMEM
 
     .bss : {
         _sbss = .;

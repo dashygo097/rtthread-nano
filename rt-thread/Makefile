@@ -1,13 +1,14 @@
 TARGET ?= demu-virt-riscv32
 ifeq ($(TARGET), demu-virt-riscv32)
   BSP_DIR   = bsp/demu-virt-riscv32
-  CPU_DIR   = libcpu/risc-v/demu
-  MARCH     = rv32i_zicsr
+  CPU_DIR   = libcpu/risc-v/common
+  MARCH     = rv32im_zicsr
+  EXTRA_ASM = libcpu/risc-v/rv32m1/interrupt_gcc.S
 
 else ifeq ($(TARGET), qemu-virt-riscv32)
   BSP_DIR   = bsp/qemu-virt-riscv32
   CPU_DIR   = libcpu/risc-v/common
-  MARCH     = rv32i_zicsr
+  MARCH     = rv32im_zicsr
   EXTRA_ASM = libcpu/risc-v/rv32m1/interrupt_gcc.S
 
 else
