@@ -7,7 +7,7 @@ int main(void) {
 
   while (1) {
     rt_kprintf("[MAIN] tick %d\n", tick++);
-    rt_thread_mdelay(10);
+    rt_thread_mdelay(1);
   }
   return 0;
 }
